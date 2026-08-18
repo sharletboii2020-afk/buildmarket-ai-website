@@ -1,10 +1,14 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { Loader2, CheckCircle2 } from "lucide-react";
+import { Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 import { services } from "@/lib/content";
+import { Button } from "@/components/Button";
 
 type Status = "idle" | "submitting" | "success" | "error";
+
+const inputClasses =
+  "mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-2 focus:border-accent";
 
 export default function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
@@ -42,22 +46,33 @@ export default function ContactForm() {
 
   if (status === "success") {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-2xl border border-border bg-surface p-10 text-center">
-        <CheckCircle2 className="h-10 w-10 text-accent-2" />
-        <h3 className="text-lg font-semibold">Thanks — we got your message.</h3>
+      <div className="glow-emerald flex flex-col items-center gap-3 rounded-2xl border border-border bg-surface p-10 text-center sm:p-14">
+        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-accent-2/15">
+          <CheckCircle2 className="h-7 w-7 text-accent-2" />
+        </span>
+        <h3 className="text-lg font-semibold text-foreground">
+          Thanks — we&apos;ve got your message.
+        </h3>
         <p className="max-w-sm text-sm text-muted">
-          A member of the BuildMarket AI team will reach out shortly to
-          schedule your discovery call.
+          A member of the BuildMarket AI team will reach out within one
+          business day to schedule your free strategy call.
         </p>
+        <button
+          type="button"
+          onClick={() => setStatus("idle")}
+          className="mt-2 text-sm font-medium text-accent hover:underline"
+        >
+          Send another message
+        </button>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
+    <form onSubmit={handleSubmit} noValidate className="space-y-5">
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
-          <label htmlFor="name" className="text-sm font-medium">
+          <label htmlFor="name" className="text-sm font-medium text-foreground">
             Full name
           </label>
           <input
@@ -65,12 +80,13 @@ export default function ContactForm() {
             name="name"
             type="text"
             required
-            className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-accent"
+            autoComplete="name"
+            className={inputClasses}
             placeholder="Jane Doe"
           />
         </div>
         <div>
-          <label htmlFor="email" className="text-sm font-medium">
+          <label htmlFor="email" className="text-sm font-medium text-foreground">
             Work email
           </label>
           <input
@@ -78,7 +94,8 @@ export default function ContactForm() {
             name="email"
             type="email"
             required
-            className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-accent"
+            autoComplete="email"
+            className={inputClasses}
             placeholder="jane@company.com"
           />
         </div>
@@ -86,27 +103,23 @@ export default function ContactForm() {
 
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
-          <label htmlFor="company" className="text-sm font-medium">
+          <label htmlFor="company" className="text-sm font-medium text-foreground">
             Company
           </label>
           <input
             id="company"
             name="company"
             type="text"
-            className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-accent"
+            autoComplete="organization"
+            className={inputClasses}
             placeholder="Company name"
           />
         </div>
         <div>
-          <label htmlFor="service" className="text-sm font-medium">
-            Interested in
+          <label htmlFor="service" className="text-sm font-medium text-foreground">
+            Service needed
           </label>
-          <select
-            id="service"
-            name="service"
-            className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-accent"
-            defaultValue=""
-          >
+          <select id="service" name="service" className={inputClasses} defaultValue="">
             <option value="" disabled>
               Select a service
             </option>
@@ -121,7 +134,7 @@ export default function ContactForm() {
       </div>
 
       <div>
-        <label htmlFor="message" className="text-sm font-medium">
+        <label htmlFor="message" className="text-sm font-medium text-foreground">
           Tell us about your project
         </label>
         <textarea
@@ -129,23 +142,32 @@ export default function ContactForm() {
           name="message"
           rows={5}
           required
-          className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-accent"
+          className={`${inputClasses} resize-none`}
           placeholder="What are you trying to grow, and what's getting in the way?"
         />
       </div>
 
       {status === "error" && (
-        <p className="text-sm text-red-400">{errorMessage}</p>
+        <div className="flex items-start gap-2.5 rounded-xl border border-danger/30 bg-danger/10 px-4 py-3 text-sm text-danger">
+          <AlertCircle className="mt-0.5 h-4 w-4 flex-none" />
+          <span>{errorMessage}</span>
+        </div>
       )}
 
-      <button
+      <Button
         type="submit"
+        icon={false}
+        className="w-full sm:w-auto"
         disabled={status === "submitting"}
-        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition-opacity hover:opacity-90 disabled:opacity-60 sm:w-auto"
       >
-        {status === "submitting" && <Loader2 className="h-4 w-4 animate-spin" />}
-        {status === "submitting" ? "Sending..." : "Send message"}
-      </button>
+        {status === "submitting" ? (
+          <span className="flex items-center gap-2">
+            <Loader2 className="h-4 w-4 animate-spin" /> Sending...
+          </span>
+        ) : (
+          "Send Message"
+        )}
+      </Button>
     </form>
   );
 }

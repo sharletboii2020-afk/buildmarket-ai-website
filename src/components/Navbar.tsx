@@ -2,60 +2,83 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { Menu, X, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Menu, X } from "lucide-react";
 import { navLinks } from "@/lib/content";
+import { Button } from "@/components/Button";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/80 bg-background/80 backdrop-blur">
+    <header
+      className={`sticky top-0 z-50 transition-colors duration-300 ${
+        scrolled || open
+          ? "border-b border-border bg-background/85 backdrop-blur-xl"
+          : "border-b border-transparent bg-transparent"
+      }`}
+    >
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link
           href="/"
-          className="flex items-center gap-2 text-lg font-semibold tracking-tight"
           onClick={() => setOpen(false)}
+          className="flex items-center gap-2.5 text-lg font-semibold tracking-tight"
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent to-accent-2">
-            <Sparkles className="h-4 w-4 text-background" />
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent-soft to-accent">
+            <span className="font-serif-display text-sm italic text-[#171208]">B</span>
           </span>
-          BuildMarket <span className="text-gradient">AI</span>
+          BuildMarket <span className="text-gradient font-serif-display italic">AI</span>
         </Link>
 
-        <ul className="hidden items-center gap-8 md:flex">
+        <ul className="hidden items-center gap-8 lg:flex">
           {navLinks.map((link) => {
             const active =
-              link.href === "/"
-                ? pathname === "/"
-                : pathname.startsWith(link.href);
+              link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
             return (
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className={`text-sm transition-colors hover:text-foreground ${
+                  className={`relative text-sm transition-colors hover:text-foreground ${
                     active ? "text-foreground" : "text-muted"
                   }`}
                 >
                   {link.label}
+                  {active && (
+                    <span className="absolute -bottom-1.5 left-0 right-0 h-px bg-accent" />
+                  )}
                 </Link>
               </li>
             );
           })}
         </ul>
 
-        <Link
-          href="/contact"
-          className="hidden rounded-full bg-foreground px-5 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90 md:inline-block"
-        >
-          Book a Call
-        </Link>
+        <div className="hidden lg:block">
+          <Button href="/contact" size="md">
+            Book a Free Call
+          </Button>
+        </div>
 
         <button
           type="button"
-          className="text-foreground md:hidden"
+          className="text-foreground lg:hidden"
           aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
         >
           {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -63,27 +86,34 @@ export default function Navbar() {
       </nav>
 
       {open && (
-        <div className="border-t border-border bg-background px-6 pb-6 md:hidden">
-          <ul className="flex flex-col gap-4 pt-4">
-            {navLinks.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className="block text-base text-muted hover:text-foreground"
-                  onClick={() => setOpen(false)}
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
+        <div className="border-t border-border bg-background px-6 pb-8 lg:hidden">
+          <ul className="flex flex-col gap-1 pt-4">
+            {navLinks.map((link) => {
+              const active =
+                link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    className={`block rounded-lg px-3 py-3 text-base transition-colors ${
+                      active ? "bg-surface text-foreground" : "text-muted hover:text-foreground"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
-          <Link
+          <Button
             href="/contact"
-            className="mt-6 block rounded-full bg-foreground px-5 py-2.5 text-center text-sm font-medium text-background"
+            size="lg"
+            className="mt-6 w-full"
             onClick={() => setOpen(false)}
           >
-            Book a Call
-          </Link>
+            Book a Free Call
+          </Button>
         </div>
       )}
     </header>
