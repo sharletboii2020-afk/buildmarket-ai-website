@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
 
+export const dynamic = "force-static";
+
 const siteUrl = "https://buildmarket.ai";
 
 const routes = ["", "/ugc-ads", "/premium-websites", "/ai-agents", "/contact"];

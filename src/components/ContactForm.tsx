@@ -3,44 +3,48 @@
 import { useState, type FormEvent } from "react";
 import { Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/Button";
+import { contact } from "@/lib/content";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
 const inputClasses =
   "mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-2 focus:border-accent";
 
+// Static export (no server) can't run an API route, so this opens a
+// pre-filled email to contact.email instead of POSTing anywhere.
+function buildMailtoLink(data: Record<string, string>) {
+  const subject = `New project inquiry from ${data.name}`;
+  const lines = [
+    `Name: ${data.name}`,
+    `Email: ${data.email}`,
+    `Phone / WhatsApp: ${data.phone}`,
+    data.service ? `Service interested in: ${data.service}` : null,
+  ].filter(Boolean);
+  const params = new URLSearchParams({ subject, body: lines.join("\n") });
+  return `${contact.emailLink}?${params.toString()}`;
+}
+
 export default function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setStatus("submitting");
     setErrorMessage("");
 
     const form = event.currentTarget;
-    const data = Object.fromEntries(new FormData(form).entries());
+    const data = Object.fromEntries(new FormData(form).entries()) as Record<string, string>;
 
-    try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        const body = await response.json().catch(() => null);
-        throw new Error(body?.error ?? "Something went wrong. Please try again.");
-      }
-
-      setStatus("success");
-      form.reset();
-    } catch (err) {
+    if (!data.name?.trim() || !data.email?.trim() || !data.phone?.trim()) {
       setStatus("error");
-      setErrorMessage(
-        err instanceof Error ? err.message : "Something went wrong. Please try again."
-      );
+      setErrorMessage("Name, email, and phone are required.");
+      return;
     }
+
+    setStatus("submitting");
+    window.location.href = buildMailtoLink(data);
+    setStatus("success");
+    form.reset();
   }
 
   if (status === "success") {
@@ -50,11 +54,15 @@ export default function ContactForm() {
           <CheckCircle2 className="h-7 w-7 text-accent-strong" />
         </span>
         <h3 className="text-lg font-semibold text-foreground">
-          Thanks — we&apos;ve got your details.
+          Your email app should be open now.
         </h3>
         <p className="max-w-sm text-sm text-muted">
-          We&apos;ll reach out by email or WhatsApp shortly to talk through
-          your project.
+          Just hit send on the pre-filled message and we&apos;ll reply by
+          email or WhatsApp shortly. Didn&apos;t open?{" "}
+          <a href={contact.emailLink} className="font-medium text-accent-strong hover:underline">
+            Email us directly
+          </a>
+          .
         </p>
         <button
           type="button"

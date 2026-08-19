@@ -1,0 +1,18 @@
+# BuildMarket AI — static export config for Apache (Hostinger shared hosting)
+
+# Serve the site's own 404 page instead of Apache's default
+ErrorDocument 404 /404.html
+
+# Long-cache the hashed, immutable Next.js build assets
+<IfModule mod_expires.c>
+  ExpiresActive On
+  <FilesMatch "\.(js|css|woff2?)$">
+    ExpiresDefault "access plus 1 year"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|css|woff2?)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
