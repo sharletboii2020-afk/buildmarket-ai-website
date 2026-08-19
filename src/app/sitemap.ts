@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 const siteUrl = "https://buildmarket.ai";
 
-const routes = ["", "/services", "/portfolio", "/pricing", "/about", "/contact"];
+const routes = ["", "/ugc-ads", "/premium-websites", "/ai-agents", "/contact"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return routes.map((route) => ({

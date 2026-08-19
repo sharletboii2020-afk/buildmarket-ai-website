@@ -3,9 +3,8 @@ import { NextResponse } from "next/server";
 type ContactPayload = {
   name?: string;
   email?: string;
-  company?: string;
+  phone?: string;
   service?: string;
-  message?: string;
 };
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -19,11 +18,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const { name, email, message } = payload;
+  const { name, email, phone } = payload;
 
-  if (!name?.trim() || !email?.trim() || !message?.trim()) {
+  if (!name?.trim() || !email?.trim() || !phone?.trim()) {
     return NextResponse.json(
-      { error: "Name, email, and message are required." },
+      { error: "Name, email, and phone are required." },
       { status: 400 }
     );
   }
@@ -33,8 +32,9 @@ export async function POST(request: Request) {
   }
 
   // NOTE: This is a stub handler. Wire this up to a real destination
-  // (email provider, CRM, or Slack webhook) before going live — right now
-  // submissions are only logged server-side and not delivered anywhere.
+  // (email provider, CRM, or a WhatsApp/Slack webhook) before going live —
+  // right now submissions are only logged server-side and not delivered
+  // anywhere.
   console.log("New BuildMarket AI lead:", payload);
 
   return NextResponse.json({ ok: true });

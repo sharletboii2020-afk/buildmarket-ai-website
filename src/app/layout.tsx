@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Fraunces } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import MobileStickyCTA from "@/components/MobileStickyCTA";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -26,24 +27,23 @@ const siteUrl = "https://buildmarket.ai";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "BuildMarket AI — AI-Powered Digital Growth Agency for US Businesses",
+    default: "BuildMarket AI — UGC Ads, Premium Websites & AI Agents",
     template: "%s — BuildMarket AI",
   },
   description:
-    "BuildMarket AI helps US businesses attract, convert, and manage more customers through high-converting websites, UGC & video ads, AI automation, and AI agents.",
+    "BuildMarket AI is a premium creative + AI studio helping businesses grow with UGC ads, premium websites, and AI agents that automate lead response, follow-up, and support.",
   keywords: [
-    "AI growth agency",
-    "AI marketing agency",
-    "high-converting websites",
     "UGC ads agency",
-    "AI automation for business",
+    "premium website design",
     "AI agents for business",
-    "lead generation agency",
+    "AI automation",
+    "lead capture agent",
+    "creative AI studio",
   ],
   openGraph: {
-    title: "BuildMarket AI — AI-Powered Digital Growth Agency",
+    title: "BuildMarket AI — UGC Ads, Premium Websites & AI Agents",
     description:
-      "High-converting websites, UGC & video ads, AI automation, and AI agents — combined into one growth engine for your business.",
+      "A premium creative + AI studio. UGC ads, premium websites, and AI agents that work around the clock.",
     url: siteUrl,
     siteName: "BuildMarket AI",
     locale: "en_US",
@@ -51,9 +51,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "BuildMarket AI — AI-Powered Digital Growth Agency",
+    title: "BuildMarket AI — UGC Ads, Premium Websites & AI Agents",
     description:
-      "High-converting websites, UGC & video ads, AI automation, and AI agents — combined into one growth engine for your business.",
+      "A premium creative + AI studio. UGC ads, premium websites, and AI agents that work around the clock.",
   },
   alternates: {
     canonical: siteUrl,
@@ -66,10 +66,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col overflow-x-hidden bg-background text-foreground">
+      <body className="flex min-h-full flex-col overflow-x-hidden bg-background pb-20 text-foreground lg:pb-0">
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
+        <MobileStickyCTA />
       </body>
     </html>
   );

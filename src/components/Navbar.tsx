@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
-import { navLinks } from "@/lib/content";
+import { Menu, X, Store } from "lucide-react";
+import { navLinks, shopLink } from "@/lib/content";
 import { Button } from "@/components/Button";
 
 export default function Navbar() {
@@ -28,28 +28,27 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-colors duration-300 ${
+      className={`sticky top-0 z-50 border-b transition-colors duration-300 ${
         scrolled || open
-          ? "border-b border-border bg-background/85 backdrop-blur-xl"
-          : "border-b border-transparent bg-transparent"
+          ? "border-border bg-background/90 backdrop-blur-xl"
+          : "border-transparent bg-background/60 backdrop-blur-sm"
       }`}
     >
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link
           href="/"
           onClick={() => setOpen(false)}
-          className="flex items-center gap-2.5 text-lg font-semibold tracking-tight"
+          className="flex items-center gap-2.5 text-lg font-semibold tracking-tight text-foreground"
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent-soft to-accent">
-            <span className="font-serif-display text-sm italic text-[#171208]">B</span>
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent to-accent-strong">
+            <span className="font-serif-display text-sm italic text-white">B</span>
           </span>
           BuildMarket <span className="text-gradient font-serif-display italic">AI</span>
         </Link>
 
-        <ul className="hidden items-center gap-8 lg:flex">
+        <ul className="hidden items-center gap-7 lg:flex">
           {navLinks.map((link) => {
-            const active =
-              link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+            const active = pathname.startsWith(link.href);
             return (
               <li key={link.href}>
                 <Link
@@ -66,11 +65,22 @@ export default function Navbar() {
               </li>
             );
           })}
+          <li>
+            <Link
+              href={shopLink.href}
+              className={`flex items-center gap-1.5 text-sm transition-colors hover:text-foreground ${
+                pathname.startsWith(shopLink.href) ? "text-foreground" : "text-muted"
+              }`}
+            >
+              <Store className="h-3.5 w-3.5" />
+              {shopLink.label}
+            </Link>
+          </li>
         </ul>
 
         <div className="hidden lg:block">
           <Button href="/contact" size="md">
-            Book a Free Call
+            Book a Project
           </Button>
         </div>
 
@@ -88,16 +98,15 @@ export default function Navbar() {
       {open && (
         <div className="border-t border-border bg-background px-6 pb-8 lg:hidden">
           <ul className="flex flex-col gap-1 pt-4">
-            {navLinks.map((link) => {
-              const active =
-                link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+            {[...navLinks, shopLink].map((link) => {
+              const active = pathname.startsWith(link.href);
               return (
                 <li key={link.href}>
                   <Link
                     href={link.href}
                     onClick={() => setOpen(false)}
                     className={`block rounded-lg px-3 py-3 text-base transition-colors ${
-                      active ? "bg-surface text-foreground" : "text-muted hover:text-foreground"
+                      active ? "bg-surface-2 text-foreground" : "text-muted hover:text-foreground"
                     }`}
                   >
                     {link.label}
@@ -112,7 +121,7 @@ export default function Navbar() {
             className="mt-6 w-full"
             onClick={() => setOpen(false)}
           >
-            Book a Free Call
+            Book a Project
           </Button>
         </div>
       )}

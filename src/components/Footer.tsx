@@ -1,23 +1,41 @@
 import Link from "next/link";
-import { navLinks, footerLinks, socialLinks } from "@/lib/content";
+import { Mail, MessageCircle } from "lucide-react";
+import { footerLinks, contact, socialLinks } from "@/lib/content";
 import SocialIcon, { type SocialName } from "@/components/SocialIcon";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-border bg-surface">
-      <div className="mx-auto grid max-w-6xl gap-12 px-6 py-16 sm:grid-cols-2 lg:grid-cols-5">
+    <footer className="border-t border-border bg-surface-2">
+      <div className="mx-auto grid max-w-6xl gap-12 px-6 py-16 sm:grid-cols-2 lg:grid-cols-4">
         <div className="sm:col-span-2 lg:col-span-2">
-          <Link href="/" className="flex items-center gap-2.5 text-lg font-semibold">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent-soft to-accent">
-              <span className="font-serif-display text-sm italic text-[#171208]">B</span>
+          <Link href="/" className="flex items-center gap-2.5 text-lg font-semibold text-foreground">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent to-accent-strong">
+              <span className="font-serif-display text-sm italic text-white">B</span>
             </span>
             BuildMarket <span className="text-gradient font-serif-display italic">AI</span>
           </Link>
           <p className="mt-4 max-w-sm text-sm text-muted">
-            An AI-powered digital growth agency helping US businesses attract,
-            convert, and manage more customers — through websites, creative,
-            automation, and AI agents built as one system.
+            A premium AI + creative studio helping businesses grow with UGC
+            ads, premium websites, and AI agents.
           </p>
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <a
+              href={contact.whatsappLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm text-foreground transition-colors hover:border-border-strong"
+            >
+              <MessageCircle className="h-4 w-4 text-accent-strong" />
+              WhatsApp
+            </a>
+            <a
+              href={contact.emailLink}
+              className="flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm text-foreground transition-colors hover:border-border-strong"
+            >
+              <Mail className="h-4 w-4 text-accent-strong" />
+              Email
+            </a>
+          </div>
           <div className="mt-6 flex items-center gap-3">
             {socialLinks.map((social) => (
               <a
@@ -30,19 +48,6 @@ export default function Footer() {
               </a>
             ))}
           </div>
-        </div>
-
-        <div>
-          <h3 className="text-sm font-semibold text-foreground">Navigate</h3>
-          <ul className="mt-4 space-y-3">
-            {navLinks.map((link) => (
-              <li key={link.href}>
-                <Link href={link.href} className="text-sm text-muted hover:text-foreground">
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
         </div>
 
         <div>

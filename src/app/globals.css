@@ -1,20 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --background: #07080a;
-  --surface: #0d0f12;
-  --surface-2: #14161b;
-  --surface-glass: rgba(20, 22, 27, 0.55);
-  --border: #212329;
-  --border-strong: #2c2f38;
-  --foreground: #f3f2ee;
-  --muted: #9a9a97;
-  --muted-2: #6d6d6c;
-  --accent: #cda86a;
-  --accent-soft: #e6cd9e;
-  --accent-2: #2bb673;
-  --accent-2-soft: #6fe3ac;
-  --danger: #e5675f;
+  --background: #fbf9f5;
+  --surface: #ffffff;
+  --surface-2: #f4f0e8;
+  --border: #e8e2d5;
+  --border-strong: #d9d0bc;
+  --foreground: #1c1a16;
+  --muted: #6b6459;
+  --muted-2: #96907f;
+  --accent: #b8935a;
+  --accent-soft: #d9b77e;
+  --accent-strong: #8f6f3d;
+  --danger: #b3453f;
 }
 
 @theme inline {
@@ -28,8 +26,7 @@
   --color-muted-2: var(--muted-2);
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
-  --color-accent-2: var(--accent-2);
-  --color-accent-2-soft: var(--accent-2-soft);
+  --color-accent-strong: var(--accent-strong);
   --color-danger: var(--danger);
   --font-sans: var(--font-geist-sans);
   --font-serif: var(--font-display);
@@ -47,8 +44,8 @@ body {
 }
 
 ::selection {
-  background: var(--accent);
-  color: #0a0a0a;
+  background: var(--accent-soft);
+  color: #1c1a16;
 }
 
 .font-serif-display {
@@ -56,7 +53,7 @@ body {
 }
 
 .text-gradient {
-  background: linear-gradient(100deg, var(--accent-soft) 0%, var(--accent) 45%, var(--accent-2-soft) 100%);
+  background: linear-gradient(100deg, var(--accent-strong) 0%, var(--accent) 55%, var(--accent-soft) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -64,50 +61,30 @@ body {
 
 .bg-grid {
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    linear-gradient(to right, rgba(28, 26, 22, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(28, 26, 22, 0.045) 1px, transparent 1px);
   background-size: 48px 48px;
   background-position: center top;
   -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
   mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
 }
 
-.bg-noise {
-  position: relative;
-}
-
-.bg-noise::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.035;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-}
-
-.glass {
-  background: var(--surface-glass);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--border);
-}
-
-.glow-accent {
-  box-shadow: 0 0 140px 30px rgba(205, 168, 106, 0.10);
-}
-
-.glow-emerald {
-  box-shadow: 0 0 140px 30px rgba(43, 182, 115, 0.10);
-}
-
 .card-hover {
-  transition: border-color 0.25s ease, transform 0.25s ease, background-color 0.25s ease;
+  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .card-hover:hover {
   border-color: var(--border-strong);
   transform: translateY(-2px);
+  box-shadow: 0 16px 40px -20px rgba(28, 26, 22, 0.18);
+}
+
+.shadow-premium {
+  box-shadow: 0 1px 2px rgba(28, 26, 22, 0.04), 0 20px 48px -24px rgba(28, 26, 22, 0.14);
+}
+
+.shadow-accent-glow {
+  box-shadow: 0 24px 64px -28px rgba(184, 147, 90, 0.35);
 }
 
 @media (prefers-reduced-motion: reduce) {
